@@ -50,6 +50,7 @@ export function SignUp() {
             <Input placeholder="Nome" />
 
             <Input placeholder="Senha" secureTextEntry />
+            <Input placeholder="Confirmara a Senha" secureTextEntry />
 
             <Button title="Criar e acessar" />
           </Center>
