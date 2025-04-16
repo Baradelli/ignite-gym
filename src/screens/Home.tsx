@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
-import { VStack, HStack } from "@gluestack-ui/themed";
+import { VStack, HStack, Heading, Text } from "@gluestack-ui/themed";
 import { FlatList } from "react-native";
 
 export function Home() {
@@ -33,6 +33,18 @@ export function Home() {
         contentContainerStyle={{ paddingHorizontal: 32 }}
         style={{ marginVertical: 40, maxHeight: 44, minHeight: 44 }}
       />
+
+      <VStack px="$8">
+        <HStack justifyContent="space-between" mb="$5" alignItems="center">
+          <Heading color="$gray200" fontSize="$md" fontFamily="$heading">
+            Exercícios
+          </Heading>
+
+          <Text color="$gray200" fontSize="$sm" fontFamily="$body">
+            4
+          </Text>
+        </HStack>
+      </VStack>
     </VStack>
   );
 }
