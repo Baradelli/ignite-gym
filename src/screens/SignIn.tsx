@@ -63,7 +63,7 @@ export function SignIn() {
 
           <Center flex={1} justifyContent="flex-end" mt="$4">
             <Text color="$gray100" fontSize="$sm" mb="$3" fontFamily="$body">
-              Aindanão tem acesso?
+              Ainda não tem acesso?
             </Text>
 
             <Button
