@@ -1,5 +1,7 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 
+import { useAuth } from "@hooks/useAuth";
+
 import { AuthRoutes } from "./auth.routes";
 import { AppRoutes } from "./app.routes";
 
@@ -8,6 +10,8 @@ import { Box } from "@gluestack-ui/themed";
 
 export function Routes() {
   const theme = DefaultTheme;
+
+  const { user } = useAuth();
 
   theme.colors.background = gluestackUIConfig.tokens.colors.gray700;
 
