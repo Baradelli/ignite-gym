@@ -1,3 +1,6 @@
+import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
+
 import {
   VStack,
   Image,
@@ -5,6 +8,7 @@ import {
   Text,
   Heading,
   ScrollView,
+  useToast,
 } from "@gluestack-ui/themed";
 
 import { useForm, Controller } from "react-hook-form";
@@ -18,6 +22,7 @@ import Logo from "@assets/logo.svg";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { ToastMessage } from "@components/ToastMessage";
 
 type FormDataProps = {
   name: string;
@@ -36,11 +41,12 @@ const signUpSchema = yup.object({
   password_confirm: yup
     .string()
     .required("Confirme a senha.")
-    .oneOf([yup.ref("password"), ""], "As senhas não conferem."),
+    .oneOf([yup.ref("password")], "As senhas não conferem."),
 });
 
 export function SignUp() {
   const navigation = useNavigation();
+  const toast = useToast();
 
   const {
     control,
@@ -54,8 +60,29 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp(data: FormDataProps) {
-    console.log(data);
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    try {
+      const { data } = await api.post("/users", { name, email, password });
+
+      console.log({ data });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível criar a conta. Tente novamente mais tarde.";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
   }
 
   return (
@@ -132,7 +159,7 @@ export function SignUp() {
               name="password_confirm"
               render={({ field: { onChange, value } }) => (
                 <Input
-                  placeholder="Confirmara a Senha"
+                  placeholder="Confirmar a Senha"
                   secureTextEntry
                   onChangeText={onChange}
                   value={value}
