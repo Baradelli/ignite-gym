@@ -19,6 +19,11 @@ import Logo from "@assets/logo.svg";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { useAuth } from "@hooks/useAuth";
+import { AppError } from "@utils/AppError";
+import { useToast } from "@gluestack-ui/themed";
+import { ToastMessage } from "@components/ToastMessage";
+import { useState } from "react";
 
 type FormDataProps = {
   email: string;
@@ -31,7 +36,11 @@ const signInSchema = yup.object({
 });
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const { signIn } = useAuth();
+  const toast = useToast();
 
   const {
     control,
@@ -45,8 +54,30 @@ export function SignIn() {
     navigation.navigate("signUp");
   }
 
-  function handleSignIn({ email, password }: FormDataProps) {
-    console.log({ email, password });
+  async function handleSignIn({ email, password }: FormDataProps) {
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      setIsLoading(false);
+
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível acessar. Tente novamente mais tarde.";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
   }
 
   return (
@@ -105,7 +136,11 @@ export function SignIn() {
               )}
             />
 
-            <Button onPress={handleSubmit(handleSignIn)} title="Acessar" />
+            <Button
+              onPress={handleSubmit(handleSignIn)}
+              title="Acessar"
+              isLoading={isLoading}
+            />
           </Center>
 
           <Center flex={1} justifyContent="flex-end" mt="$4">

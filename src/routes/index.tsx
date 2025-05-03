@@ -10,7 +10,6 @@ import { Box } from "@gluestack-ui/themed";
 
 export function Routes() {
   const theme = DefaultTheme;
-
   const { user } = useAuth();
 
   theme.colors.background = gluestackUIConfig.tokens.colors.gray700;
@@ -18,7 +17,7 @@ export function Routes() {
   return (
     <Box flex={1} bg="$gray700">
       <NavigationContainer theme={theme}>
-        <AuthRoutes />
+        {user?.id ? <AppRoutes /> : <AuthRoutes />}
       </NavigationContainer>
     </Box>
   );
